@@ -1,0 +1,113 @@
+Kodování souboru: UTF8
+Program vytvořen pro systém: Windows 7
+Podařilo se spustit na systémech Windows 7 a 10. Nepodařilo na Windows Vista.
+
+Program: xskuto00_IBP.exe
+Autor: Sára Škutová xskuto00@stud.fit.vutbr.cz
+Vedoucí: prof. Dr. Ing. Psvel Zemčík
+Rok: 2016/2017
+Projekt:
+	Tento projekt vznikl jako bakalářská práce: Systém pro import/správu fotografií.
+	Program umožňuje rozdělovat fotografie do skupin a následně v nich vyhledat duplikáty fotografií.
+	Po práci s fotografiemi, je možné jejích rozdělení přenést i na disk.
+
+---------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------
+
+Obsah tohoto CD:
+
+	./aplikace/ - adresář se spustilenou aplikaci
+
+	./zdrojove_kody/ - adresář se zdrojovými kódy
+
+	./technicka_zprava/ - adresář s technickou zpravou a jejími zdrojovými kódy
+
+	./technicka_zprava/zdrojove_kody/ - adresář se zdrojovými kódy k technické zprávě
+
+	./testFoto/ - adresář s testovacími fotografiemi
+
+---------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------
+
+Potřebné knihovny: 
+
+	- Exiv2 knihovna (tvořeno na verzi 0.25) http://www.exiv2.org/
+	Aby bylo možné program přeložit, Exiv2 knihovna musí být přeložena pomocí MinGW.
+	Při defaultní instalaci MinGW a Exiv2, by se tato knihovna měla nacházet v C:/MinGW/msys/1.0/local/
+	Případné návody naleznete zde: http://dev.exiv2.org/boards/3/topics/1259 nebo zde: http://clanmills.com/exiv2/qt.shtml
+	
+	POZOR!! Několik dní před odevzdáním jsem zjistila, že byla vydána nová verze Exiv2 knihovny (verze 0.26).
+			Jedna ze změn, je že podpora MinGW msys/1.0 byla přerušena.
+			Pokud se knihovna nenainstaluje do potřebného adresáře, tak se v projektovém souboru xskuto00_IBP.pro
+			musí změnit tyto řádky: 
+			win32 {
+				INCLUDEPATH  += $$quote(C:/MinGW/msys/1.0/local/include)
+				LIBS         += $$quote(C:/MinGW/msys/1.0/local/lib/libexiv2.dll.a)
+				}
+			
+			aby Qt bylo schopné Exiv2 knihovnu najít.
+			
+			V případě překladu pomocí CMake, tak se musí změnit tyto řádky v souboru CMakeLists.txt:
+			INCLUDE_DIRECTORIES("C:/MinGW/msys/1.0/local/include")
+			TARGET_LINK_LIBRARIES(${PROJECT_NAME} C:/MinGW/msys/1.0/local/lib/libexiv2.dll.a)
+	
+	- Qt framework (tvořeno na verzi 5.8) https://www.qt.io/
+	
+	
+	
+---------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------
+
+Návod na přeložení:
+
+	Při překladu se mohou zobrazit varování způsobené knihovnou Exiv2.
+
+	Možnost 1: 
+		Pomocí CMake v příkazové řádce, soubor CMakeLists.txt se nachází ve ./zdrojove_kody/
+			cmake -G "jeden z dostupných překladačů"
+			make 
+		Na Windows 7 s překladačem MinGW tato kombinace vypadá:
+			cmake -G "MinGW Makefiles"
+			mingw32-make 
+				
+	Možnost 2:
+		V příkazové řádce pomocí Qt nástrojů:
+			qmake "cesta_k_souboru\xskuto00_IBP.pro"
+			make
+			
+	Možnost 3: 
+		Otevřít projektový soubor xskuto00_IBP.pro a po importu do Qt Creatoru
+		přeložit pomocí programu.
+	
+---------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------
+
+Návod na spuštění:
+
+	Jelikož program pro své potřeby vytváří textový soubor v místě, kde se nachází spusitelný soubor, tak doporučuji
+	zkopírovat adresář se spustelným souborem mimo CD.
+
+	Možnost 1:
+		Výsledný spustitelný soubor po překladu pomoci CMake se nachází v ./zdrojove_kody/build.
+		xskuto00_IBP.exe
+	
+	Možnost 2:
+		Po překladu pomocí qmake a make se vytvoří v místě překladu adresář release,
+		spustitelný soubor se nachází v něm.
+	
+	Možnost 3:
+		Spustit pomocí Qt Creatoru.
+	
+	Možnost 4:
+		Na tomto CD se v adresáří ./aplikace/ nachází spustitelný soubor.
+		
+	Poznámka:
+		Pokud Qt a MinGW není v PATH proměnné systému, tak je možné že při pokusu o spuštění programu se objeví chybová hláška
+		o chybějicích knihovnách. Pokud tato situace nastane, tak se musí použít Qt nástroj windeployqt, kterému se zadá 
+		adresář kde se nachází spustitelný soubor. Tento nástroj následně zkopíruje potřebné knihovny do daného adresáře.
+		Je ovšem možné, že ani tento nástroj nenalezne všechny potřebné knihovny. Proto doporučuji zkopírovat knihovny
+		z adresáře ./aplikace.
+			windeployqt ./adresář/s/aplikací
+		
+---------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------
